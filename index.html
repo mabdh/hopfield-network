@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="icon" href="./favicon.ico">
+    <title>Hopfield Network</title>
+
+    <style>
+
+        #overlay {
+            position: fixed; /* Sit on top of the page content */
+            display: none; /* Hidden by default */
+            width: 100%; /* Full width (cover the whole page) */
+            height: 100%; /* Full height (cover the whole page) */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+            cursor: pointer; /* Add a pointer on hover */
+        }
+        #text{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 50px;
+            color: white;
+            transform: translate(-50%,-50%);
+            -ms-transform: translate(-50%,-50%);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand">Hopfield Network</a>
+    <form class="form-inline">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">
+            How To
+        </button>
+
+    </form>
+</nav>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">How To</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+               </button>
+           </div>
+           <div class="modal-body">
+               <p>
+                    Hopefield Network mimicks how memory works. It is an autoassociative memory which can learn (remember) one or more patterns
+                    and given the partial (incomplete) learned pattern (some information of pattern are missing), the network can recall and recover a whole learned pattern.
+                <br> <br>
+                There are two steps in this application, train and predict.
+                <br>
+                <br>
+                <b>Train</b>
+               <ul>
+                   <li>In this step we will train 3 patterns on the screen</li>
+                   <li>You can draw the 3 patterns by yourself by clicking the grid</li>
+                   <li>Or you can use the preset image provided</li>
+                   <li>Click the <b>Train 3 Patterns</b> button to start training and updating network weights</li>
+               </ul>
+               <br>
+               <b>Predict</b>
+               <ul>
+                   <li>In this step we the network will predict the learned pattern once you click the <b>Predict</b> button</li>
+                   <li>You can draw incomplete pattern similar with the learned pattern in the training phase</li>
+                   <li>Or you can use the preset image + noise provided</li>
+               </ul>
+               </p>
+           </div>
+           <div class="modal-footer">
+           </div>
+       </div>
+   </div>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-md-center" style="margin-top: 40px;">
+        <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" id="weight-update" data-autohide="true">
+            <div class="toast-body">
+              Weight Updated!
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-md-center" style="margin-bottom: 10px;">
+        <h3>Train</h3>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md">
+            <div class="row justify-content-md-center">
+                <canvas id="canvas-1" width="450" height="450" style="border:1px solid #000000;"/>
+            </div>
+            <div class="row justify-content-md-center" style="margin:5px;">
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Load Preset Image
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" id="dropdown-preset-random-1" href="#">Random</a>
+                        <a class="dropdown-item" id="dropdown-preset-a-1" href="#">A</a>
+                        <a class="dropdown-item" id="dropdown-preset-c-1" href="#">C</a>
+                        <a class="dropdown-item" id="dropdown-preset-z-1" href="#">Z</a>
+                        <a class="dropdown-item" id="dropdown-preset-batman-1" href="#">Batman</a>
+                    </div>
+                </div>
+                                 
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="row justify-content-md-center">
+                <canvas id="canvas-2" width="450" height="450" style="border:1px solid #000000;"/>
+            </div>
+            <div class="row justify-content-md-center" style="margin:5px;">
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop2" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Load Preset Image
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
+                        <a class="dropdown-item" id="dropdown-preset-random-2" href="#">Random</a>
+                        <a class="dropdown-item" id="dropdown-preset-a-2" href="#">A</a>
+                        <a class="dropdown-item" id="dropdown-preset-c-2" href="#">C</a>
+                        <a class="dropdown-item" id="dropdown-preset-z-2" href="#">Z</a>
+                        <a class="dropdown-item" id="dropdown-preset-batman-2" href="#">Batman</a>
+                    </div>
+                </div>     
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="row justify-content-md-center">
+                <canvas id="canvas-3" width="450" height="450" style="border:1px solid #000000;"/>
+            </div>
+            <div class="row justify-content-md-center" style="margin:5px;">
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop3" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Load Preset Image
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop3">
+                        <a class="dropdown-item" id="dropdown-preset-random-3" href="#">Random</a>
+                        <a class="dropdown-item" id="dropdown-preset-a-3" href="#">A</a>
+                        <a class="dropdown-item" id="dropdown-preset-c-3" href="#">C</a>
+                        <a class="dropdown-item" id="dropdown-preset-z-3" href="#">Z</a>
+                        <a class="dropdown-item" id="dropdown-preset-batman-3" href="#">Batman</a>
+                    </div>
+                </div>
+                                 
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-md-center">
+        <button id="button-train" class="btn btn-outline-secondary" type="button">Train 3 Patterns</button>
+    </div>
+    
+    <hr>
+    <div class="row justify-content-md-center">
+        <h3>Predict</h3>
+        
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md"></div>
+        <div class="col-md">
+            <div class="row justify-content-md-center">
+                <div class="progress" style="height: 30px; width: 450px;">
+                    <div id="progress-predict" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center" style="margin: 5px;">
+                <canvas id="canvas-res" width="450" height="450" style="border:1px solid #000000;"/>
+            </div>
+            <div class="row justify-content-md-center" style="margin:5px;">
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDropRes" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Load Preset Image + Noise
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDropRes">
+                        <a class="dropdown-item" id="dropdown-preset-a-noise" href="#">A + Noise</a>
+                        <a class="dropdown-item" id="dropdown-preset-c-noise" href="#">C + Noise</a>
+                        <a class="dropdown-item" id="dropdown-preset-z-noise" href="#">Z + Noise</a>
+                        <a class="dropdown-item" id="dropdown-preset-batman-noise" href="#">Batman + Noise</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <button id="button-process" class="btn btn-outline-secondary" type="button">Predict</button>                                    
+            </div>
+        </div>
+        <div class="col-md"></div>
+    </div>
+    <hr>
+</div>
+    <!--<div class="row justify-content-md-center">
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+            <div class="progress">
+
+        </div>
+        <div class="col-sm">
+        </div>
+
+    </div>-->
+<!-- Footer -->
+<h4><i>*Delay is added in prediction to observe how the network recover the information</i></h4>
+<footer class="page-footer font-small blue pt-4">
+
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2019
+        <a href="http://mabdh.github.io/"> Muhammad Abduh</a>
+    </div>
+    <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script type="text/javascript" src="dist/bundle.js"></script>
+</body>
