@@ -16,13 +16,14 @@
     ]
   },
   "scripts": {
-    "build": "browserify script.js -o dist/bundle.js",
+    "build": "browserify -g uglifyify ./script.js > dist/bundle.js",
     "watch": "watchify script.js -o dist/bundle.js -v"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "browserify": "^16.2.3",
+    "uglifyify": "^5.0.2",
     "watchify": "^3.11.0"
   },
   "devDependencies": {
