@@ -1,2 +1,2 @@
 # hopfield-network
-Simulation of Hopfield Network on Web
+Web based Simulation and Visualization of Hopfield Network
